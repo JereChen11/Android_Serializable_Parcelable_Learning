@@ -5,6 +5,10 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 
+import com.google.gson.Gson;
+
+import java.util.HashMap;
+
 import androidx.appcompat.app.AppCompatActivity;
 
 /**
@@ -13,6 +17,7 @@ import androidx.appcompat.app.AppCompatActivity;
 public class MainActivity extends AppCompatActivity implements View.OnClickListener {
     public static final String PUT_SERIALIZABLE_USER_KEY = "serializable_user";
     public static final String PUT_PARCELABLE_ARTICLE_KEY = "pacelable_article";
+    public static final String GSON_TEST_USERS_MAP_STRING_KEY = "usersMapString";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -21,8 +26,10 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
         Button putSerializableBtn = findViewById(R.id.put_serializable);
         Button putParcelableBtn = findViewById(R.id.put_parcelable);
+        Button gsonTestBtn = findViewById(R.id.gson_test_btn);
         putSerializableBtn.setOnClickListener(this);
         putParcelableBtn.setOnClickListener(this);
+        gsonTestBtn.setOnClickListener(this);
     }
 
     @Override
@@ -55,6 +62,29 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 parcelableIntent.putExtras(parcelableBundle);
 
                 startActivity(parcelableIntent);
+                break;
+            case R.id.gson_test_btn:
+                User kobe = new User();
+                kobe.setName("Kobe Bryant");
+                kobe.setAge("40");
+                kobe.setHobby("playing basketball!");
+
+                User james = new User();
+                james.setName("LeBron James");
+                james.setAge("37");
+                james.setHobby("playing basketball!");
+
+                HashMap<Integer, User> usersMap = new HashMap<>();
+                usersMap.put(1, kobe);
+                usersMap.put(2, james);
+
+                //序列化 HashMap to String
+                Gson gson = new Gson();
+                String userString = gson.toJson(usersMap);
+
+                Intent intent = new Intent(MainActivity.this, GsonTestActivity.class);
+                intent.putExtra(GSON_TEST_USERS_MAP_STRING_KEY, userString);
+                startActivity(intent);
                 break;
             default:
                 break;
